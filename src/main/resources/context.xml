@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/rabbit
+        http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+       ">
+
+       <rabbit:connection-factory id="connectionFactory"
+                                  username="guest" password="guest" host = "127.0.0.1"/>
+
+       <bean id="jsonMessageConverter"  class="com.rabbitmq.util.FastJsonMessageConverter"/>
+       <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
+                        exchange="myExchange" routing-key="foo.bar" message-converter="jsonMessageConverter" />
+
+       <rabbit:admin connection-factory="connectionFactory" />
+
+       <rabbit:queue name="myQueue" />
+
+       <rabbit:topic-exchange name="myExchange">
+              <rabbit:bindings>
+                     <rabbit:binding queue="myQueue" pattern="foo.*" />
+              </rabbit:bindings>
+       </rabbit:topic-exchange>
+       <bean id="foo" class="mervyn.Foo" />
+       <bean id="footTest" class="mervyn.FooTest"/>
+
+       <rabbit:listener-container connection-factory="connectionFactory">
+              <rabbit:listener ref="footTest" method="testListen" queue-names="myQueue" />
+       </rabbit:listener-container>
+
+
+</beans>
