@@ -25,10 +25,9 @@
               </rabbit:bindings>
        </rabbit:topic-exchange>
        <bean id="foo" class="mervyn.Foo" />
-       <bean id="footTest" class="mervyn.FooTest"/>
 
        <rabbit:listener-container connection-factory="connectionFactory">
-              <rabbit:listener ref="footTest" method="testListen" queue-names="myQueue" />
+              <rabbit:listener ref="foo"  queue-names="myQueue"/>
        </rabbit:listener-container>
 
 

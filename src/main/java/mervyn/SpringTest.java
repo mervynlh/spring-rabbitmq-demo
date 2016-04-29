@@ -13,9 +13,10 @@ public class SpringTest {
         AbstractApplicationContext ctx =
                 new ClassPathXmlApplicationContext("context.xml");
         RabbitTemplate template = ctx.getBean(RabbitTemplate.class);
-        template.convertAndSend("Hello, world11!");
-        FooTest bean = ctx.getBean(FooTest.class);
-        bean.testListen("aaa");
+        User user = new User();
+        user.setPassword("abcdedf");
+        user.setUsername("mervyn");
+        template.convertAndSend(user);
         Thread.sleep(1000);
         ctx.destroy();
     }
